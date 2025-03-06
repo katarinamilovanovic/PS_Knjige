@@ -14,17 +14,17 @@ import model.Knjiga;
  * @author kmilo
  */
 public class ModelTabeleKnjige extends AbstractTableModel {
-    
+
     private List<Knjiga> listaKnjiga = new ArrayList<>();
-    private final String[] kolone = {"Naslov", "Autor", "ISBN", "Godina izdanja", "Zanr"};
-    
-    public ModelTabeleKnjige(List<Knjiga> listaKnjga){
+    private final String[] kolone = {"ID", "Naslov", "Autor", "ISBN", "Godina izdanja", "Zanr"};
+
+    public ModelTabeleKnjige(List<Knjiga> listaKnjga) {
         this.listaKnjiga = listaKnjga;
     }
 
     @Override
     public int getRowCount() {
-       return listaKnjiga.size();
+        return listaKnjiga.size();
     }
 
     @Override
@@ -38,18 +38,20 @@ public class ModelTabeleKnjige extends AbstractTableModel {
         switch (columnIndex) {
             
             case 0:
-                return knjiga.getNaslov();
+                return knjiga.getID();
             case 1:
-                return knjiga.getAutor().getIme() + " "+ knjiga.getAutor().getPrezime();
+                return knjiga.getNaslov();
             case 2:
-                return knjiga.getISBN();
+                return knjiga.getAutor().getIme() + " " + knjiga.getAutor().getPrezime();
             case 3:
-                return knjiga.getGodinaIzdanja();
+                return knjiga.getISBN();
             case 4:
+                return knjiga.getGodinaIzdanja();
+            case 5:
                 return knjiga.getZanr();
-       
+
             default:
-                return null;   
+                return null;
         }
     }
 
@@ -61,8 +63,11 @@ public class ModelTabeleKnjige extends AbstractTableModel {
     void osveziPodatke() {
         fireTableDataChanged();
     }
-    
-    
+
+    public List<Knjiga> getListaKnjiga() {
+        return listaKnjiga;
+    }
+
     
     
 }

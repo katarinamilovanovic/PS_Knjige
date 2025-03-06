@@ -6,6 +6,7 @@ package forme;
 
 import controller.Controller;
 import java.util.List;
+import java.util.Random;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import model.Autor;
@@ -197,9 +198,13 @@ public class FormaKnjiga extends javax.swing.JDialog {
         Zanr zanr = (Zanr) cmbZanr.getSelectedItem();
         Autor autor = (Autor) cmbAutor.getSelectedItem();
 
-        Knjiga novaKnjiga = new Knjiga(naslov, autor, isbn, godinaIzdanja, zanr);
+        Random rand = new Random();
+        int id = 101 + rand.nextInt(Integer.MAX_VALUE -100);
         
-        Controller.getInstance().dodajKnjigu(novaKnjiga);
+        Knjiga novaKnjiga = new Knjiga(id, naslov, autor, isbn, godinaIzdanja, zanr);
+        
+        Controller.getInstance().dodajKnjiguUBazu(novaKnjiga);
+        //Controller.getInstance().dodajKnjigu(novaKnjiga);
         JOptionPane.showMessageDialog(this, "Knjiga je uspesno dodata", "Uspesno", JOptionPane.INFORMATION_MESSAGE);
         
         gf.osveziTabelu();
@@ -228,7 +233,7 @@ public class FormaKnjiga extends javax.swing.JDialog {
         
         JOptionPane.showMessageDialog(this, "Knjiga je uspesno izmenjena", "Uspesno",JOptionPane.INFORMATION_MESSAGE);
         
-        
+        Controller.getInstance().azurirajKnjigu(knjigaZaIzmenu);
         gf.osveziTabelu();
         this.dispose();
                 
@@ -257,7 +262,7 @@ public class FormaKnjiga extends javax.swing.JDialog {
     private void popuniComboBoxAutorima() {
         cmbAutor.removeAllItems();
 
-        List<Autor> autori = Controller.getInstance().getListaAutora();
+        List<Autor> autori = Controller.getInstance().ucitajListuAutoraIzBaze();
         for (Autor autor : autori) {
             cmbAutor.addItem(autor);
         }

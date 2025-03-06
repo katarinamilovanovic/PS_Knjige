@@ -11,6 +11,8 @@ import java.util.Objects;
  * @author kmilo
  */
 public class Autor {
+    
+    private int ID;
     private String ime;
     private String prezime;
     private int godinaRodjenja;
@@ -58,6 +60,16 @@ public class Autor {
         this.biografija = biografija;
     }
 
+    public Autor(int ID, String ime, String prezime, int godinaRodjenja, String biografija) {
+        this.ID = ID;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.godinaRodjenja = godinaRodjenja;
+        this.biografija = biografija;
+    }
+    
+    
+
     @Override
     public String toString() {
         return ime + " " + prezime;
@@ -88,6 +100,14 @@ public class Autor {
             return false;
         }
         return Objects.equals(this.prezime, other.prezime);
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
     
     

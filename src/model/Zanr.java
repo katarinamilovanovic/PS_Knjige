@@ -9,9 +9,12 @@ package model;
  * @author kmilo
  */
 public enum Zanr {
-    ROMAN,
+    Roman,
+    Poezija,
+    Naucna_fantastika,
+    Detektivski,
     POEZIJA,
-    ISTORIJSKI,
+    Istorijski,
     NAUCNA_FANTASTIKA,
     DETEKTIVSKI,
 }

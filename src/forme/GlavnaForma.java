@@ -24,7 +24,9 @@ private Controller kontroler;
     public GlavnaForma() {
         initComponents();
         kontroler = Controller.getInstance();
-        ModelTabeleKnjige modelTabele = new ModelTabeleKnjige(kontroler.getListaKnjiga());
+        //ModelTabeleKnjige modelTabele = new ModelTabeleKnjige(kontroler.getListaKnjiga());
+        ModelTabeleKnjige modelTabele = new ModelTabeleKnjige(kontroler.ucitajListuKnjigaIzBaze());
+        
         tblKnjige.setModel(modelTabele);
         
     }
@@ -200,7 +202,8 @@ private Controller kontroler;
             JOptionPane.showMessageDialog(this, "Morate selektovati knjigu koju zelite da obrisete", "Upozorenje", JOptionPane.WARNING_MESSAGE);
             return;
         }else{
-            Knjiga selektovanaKnjiga = Controller.getInstance().getListaKnjiga().get(selektovaniRed);
+           Knjiga selektovanaKnjiga = kontroler.ucitajListuKnjigaIzBaze().get(selektovaniRed);
+            //Knjiga selektovanaKnjiga = Controller.getInstance().getListaKnjiga().get(selektovaniRed);
             FormaKnjiga fk = new FormaKnjiga(this, true, selektovanaKnjiga);
             fk.setVisible(true);
         }
@@ -222,7 +225,11 @@ private Controller kontroler;
             JOptionPane.showMessageDialog(this, "Morate selektovati knjigu koju zelite da obrisete", "Upozorenje", JOptionPane.WARNING_MESSAGE);
             return;
         }else{
-            Controller.getInstance().obrisiKnjigu(selektovaniRed);
+            ModelTabeleKnjige mtk = (ModelTabeleKnjige) tblKnjige.getModel();
+            
+            int id = mtk.getListaKnjiga().get(selektovaniRed).getID();
+            Controller.getInstance().obrisiKnjiguIzBaze(id);
+           // Controller.getInstance().obrisiKnjigu(selektovaniRed);
             osveziTabelu();
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
@@ -282,7 +289,12 @@ private Controller kontroler;
     // End of variables declaration//GEN-END:variables
 
     void osveziTabelu() {
-        ModelTabeleKnjige modelTabele = (ModelTabeleKnjige) tblKnjige.getModel();
-        modelTabele.osveziPodatke();
+        
+        ModelTabeleKnjige mtk = new ModelTabeleKnjige(kontroler.ucitajListuKnjigaIzBaze());
+        tblKnjige.setModel(mtk);
+        
+
+        //ModelTabeleKnjige modelTabele = (ModelTabeleKnjige) tblKnjige.getModel();
+        //modelTabele.osveziPodatke();
     }
 }
