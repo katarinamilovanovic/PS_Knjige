@@ -4,12 +4,12 @@
  */
 package controller;
 
-
 import baza.DBBroker;
 import java.util.ArrayList;
 import java.util.List;
 import model.Autor;
 import model.Knjiga;
+import model.User;
 import model.Zanr;
 
 /**
@@ -17,11 +17,12 @@ import model.Zanr;
  * @author kmilo
  */
 public class Controller {
- 
+
     private DBBroker dbb;
-           
+
     private List<Knjiga> listaKnjiga = new ArrayList<>();
     private List<Autor> listaAutora = new ArrayList<>();
+    private List<User> listaKorisnika = new ArrayList<>();
 
     public List<Knjiga> getListaKnjiga() {
         return listaKnjiga;
@@ -38,25 +39,37 @@ public class Controller {
     public void setListaAutora(List<Autor> listaAutora) {
         this.listaAutora = listaAutora;
     }
-    
-    
-    
+
+    public List<User> getListaKorisnika() {
+        return listaKorisnika;
+    }
+
+    public void setListaKorisnika(List<User> listaKorisnika) {
+        this.listaKorisnika = listaKorisnika;
+    }
+
     private static Controller instance;
 
     public static Controller getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new Controller();
         }
         return instance;
     }
-    
-    
 
     private Controller() {
-        
-    dbb = new DBBroker();
-                   
-   /* Autor autor1 = new Autor("Ivo", "Andric", 1897, "Biografija auora Ive Andrica");
+
+        dbb = new DBBroker();
+
+        User u1 = new User(1, "katarina", "katarina");
+        User u2 = new User(2, "marko", "marko");
+        User u3 = new User(3, "vera", "vera");
+
+        listaKorisnika.add(u1);
+        listaKorisnika.add(u2);
+        listaKorisnika.add(u3);
+
+        /* Autor autor1 = new Autor("Ivo", "Andric", 1897, "Biografija auora Ive Andrica");
     Autor autor2 = new Autor("Danilo", "Kis", 1935, "Biografija auora Danila Kisa");
     Autor autor3 = new Autor("Mesa", "Selimovic", 1910, "Biografija auora Mese Selimovica");
 
@@ -73,7 +86,7 @@ public class Controller {
     listaAutora.add(autor1);
     listaAutora.add(autor2);
     listaAutora.add(autor3);
-*/
+         */
     
     
     }
@@ -81,8 +94,8 @@ public class Controller {
     public void obrisiKnjigu(int selektovaniRed) {
         listaKnjiga.remove(selektovaniRed);
     }
-    
-      public void obrisiKnjiguIzBaze(int id) {
+
+    public void obrisiKnjiguIzBaze(int id) {
         dbb.obrisiKnjiguIzBaze(id);
     }
 
@@ -97,6 +110,8 @@ public class Controller {
     public List<Autor> ucitajListuAutoraIzBaze() {
         return dbb.ucitajListuAutoraIzBaze();
     }
+    
+    
 
     public void dodajKnjiguUBazu(Knjiga novaKnjiga) {
         dbb.dodajKnjiguUBazu(novaKnjiga);
@@ -106,9 +121,20 @@ public class Controller {
         dbb.azurirajKnjigu(knjigaZaIzmenu);
     }
 
-  
-  
+    public boolean login1(String username, String password) {
+        for(User u : listaKorisnika){
+            if(u.getUsername().equals(username) && u.getPassword().equals(password)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean login2(String username, String password) {
+       return dbb.login2(username, password);
+    }
+
     
-    
+
     
 }

@@ -23,30 +23,28 @@ public class FormaKnjiga extends javax.swing.JDialog {
     /**
      * Creates new form FormaKnjiga
      */
-    
     private GlavnaForma gf;
     private Knjiga knjigaZaIzmenu;
-    
+
     public FormaKnjiga(java.awt.Frame parent, boolean modal, Knjiga knjigaZaIzmenu) {
         super(parent, modal);
         initComponents();
         //kontroler = Controller.getInstance();
         this.gf = (GlavnaForma) parent;
         popuniComboBoxAutorima();
-        
-        
-        if(knjigaZaIzmenu != null){
+
+        if (knjigaZaIzmenu != null) {
             this.knjigaZaIzmenu = knjigaZaIzmenu;
             txtNaslov.setText(knjigaZaIzmenu.getNaslov());
             cmbAutor.setSelectedItem(knjigaZaIzmenu.getAutor());
             txtISBN.setText(knjigaZaIzmenu.getISBN());
             txtISBN.setEnabled(false);
             txtGodinaIzdanja.setText(String.valueOf(knjigaZaIzmenu.getGodinaIzdanja()));
-          //  txtGodinaIzdanja.setText(knjigaZaIzmenu.getGodinaIzdanja() + "");
+            //  txtGodinaIzdanja.setText(knjigaZaIzmenu.getGodinaIzdanja() + "");
             cmbZanr.setSelectedItem(knjigaZaIzmenu.getZanr());
             btnDodaj.setVisible(false);
-            
-        }else{
+
+        } else {
             btnIzmeni.setVisible(false);
         }
     }
@@ -187,7 +185,42 @@ public class FormaKnjiga extends javax.swing.JDialog {
 
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
         String naslov = txtNaslov.getText();
+        if (naslov == null || naslov.trim().isEmpty() || naslov.trim().length() < 3) {
+            JOptionPane.showMessageDialog(this, "Naslov nije u dobrom formatu", "Greska", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         String isbn = txtISBN.getText();
+        int godinaIzdanja;
+        try {
+            godinaIzdanja = Integer.parseInt(txtGodinaIzdanja.getText());
+            if (godinaIzdanja < 1800 || godinaIzdanja > 2023) {
+                JOptionPane.showMessageDialog(this, "Godina izdanja mora biti veca od 1800 i manja od 2023", "Greska", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Godina izdanja mora biti broj", "Greska", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Zanr zanr = (Zanr) cmbZanr.getSelectedItem();
+        Autor autor = (Autor) cmbAutor.getSelectedItem();
+
+        Random rand = new Random();
+        int id = 101 + rand.nextInt(Integer.MAX_VALUE - 100);
+
+        Knjiga novaKnjiga = new Knjiga(id, naslov, autor, isbn, godinaIzdanja, zanr);
+
+        Controller.getInstance().dodajKnjiguUBazu(novaKnjiga);
+        //Controller.getInstance().dodajKnjigu(novaKnjiga);
+        JOptionPane.showMessageDialog(this, "Knjiga je uspesno dodata", "Uspesno", JOptionPane.INFORMATION_MESSAGE);
+
+        gf.osveziTabelu();
+        this.dispose();
+    }//GEN-LAST:event_btnDodajActionPerformed
+
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
+        String naziv = txtNaslov.getText();
+        //String isbn = txtISBN.getText();
         int godinaIzdanja;
         try {
             godinaIzdanja = Integer.parseInt(txtGodinaIzdanja.getText());
@@ -198,45 +231,18 @@ public class FormaKnjiga extends javax.swing.JDialog {
         Zanr zanr = (Zanr) cmbZanr.getSelectedItem();
         Autor autor = (Autor) cmbAutor.getSelectedItem();
 
-        Random rand = new Random();
-        int id = 101 + rand.nextInt(Integer.MAX_VALUE -100);
-        
-        Knjiga novaKnjiga = new Knjiga(id, naslov, autor, isbn, godinaIzdanja, zanr);
-        
-        Controller.getInstance().dodajKnjiguUBazu(novaKnjiga);
-        //Controller.getInstance().dodajKnjigu(novaKnjiga);
-        JOptionPane.showMessageDialog(this, "Knjiga je uspesno dodata", "Uspesno", JOptionPane.INFORMATION_MESSAGE);
-        
-        gf.osveziTabelu();
-        this.dispose();
-    }//GEN-LAST:event_btnDodajActionPerformed
-
-    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
-        String naziv = txtNaslov.getText();
-        //String isbn = txtISBN.getText();
-        int godinaIzdanja;
-        try{
-            godinaIzdanja = Integer.parseInt(txtGodinaIzdanja.getText());
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Godina izdanja mora biti broj", "Greska", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        Zanr zanr = (Zanr) cmbZanr.getSelectedItem();
-        Autor autor = (Autor) cmbAutor.getSelectedItem();
-        
-        
         knjigaZaIzmenu.setNaslov(naziv);
         knjigaZaIzmenu.setAutor(autor);
         knjigaZaIzmenu.setGodinaIzdanja(godinaIzdanja);
-       // knjigaZaIzmenu.setISBN(isbn);
+        // knjigaZaIzmenu.setISBN(isbn);
         knjigaZaIzmenu.setZanr(zanr);
-        
-        JOptionPane.showMessageDialog(this, "Knjiga je uspesno izmenjena", "Uspesno",JOptionPane.INFORMATION_MESSAGE);
-        
+
+        JOptionPane.showMessageDialog(this, "Knjiga je uspesno izmenjena", "Uspesno", JOptionPane.INFORMATION_MESSAGE);
+
         Controller.getInstance().azurirajKnjigu(knjigaZaIzmenu);
         gf.osveziTabelu();
         this.dispose();
-                
+
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
     /**

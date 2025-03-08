@@ -131,4 +131,22 @@ public class DBBroker {
         }
     }
 
+    public boolean login2(String username, String password) {
+        try {
+            String upit = "SELECT * FROM user WHERE username = ? and password = ?";
+            PreparedStatement ps = Konekcija.getInstance().getConnection().prepareStatement(upit);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return true;
+            }else {
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBBroker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
 }
